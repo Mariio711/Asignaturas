@@ -1,5 +1,5 @@
 #include <iostream> // for std::cout, std::cin
-#include <conio.h>  // for getch
+  // for getch
 
 using namespace std; // for std::cout, std::cin
 
@@ -43,6 +43,6 @@ int main()
         cout << numeros[i] << " ";
     }
 
-    getch();
+    cin.get();
     return 0;
 }

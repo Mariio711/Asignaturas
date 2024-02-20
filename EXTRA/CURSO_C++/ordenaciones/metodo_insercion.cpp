@@ -4,7 +4,6 @@
  * Luego de ordenar el arreglo, se muestra el resultado en orden ascendente y descendente.
  */
 #include <iostream>
-#include <conio.h>
 
 using namespace std;
 
@@ -45,6 +44,6 @@ int main()
         cout << numeros[i] << " ";
     }
 
-    getch();
+    cin.get();
     return 0;
 }
