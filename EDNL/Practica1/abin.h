@@ -121,8 +121,8 @@ return n->padre;
 template <typename T> inline
 typename Abin<T>::nodo Abin<T>::hijoIzqdo(nodo n) const
 {
-assert(n != NODO_NULO);
-return n->hizq;
+    assert(n != NODO_NULO);
+    return n->hizq;
 }
 template <typename T> inline
 typename Abin<T>::nodo Abin<T>::hijoDrcho(nodo n) const
@@ -152,17 +152,16 @@ inline Abin<T>::~Abin()
 {
 destruirNodos(r); // Vaciar el árbol.
 }
-
+//Ejercicio 4 p1
 template <typename T>
 inline int Abin<T>::profundidad(nodo n) const{
     assert(n != NODO_NULO);
-    int prof=0;
+
     if(n->padre == NODO_NULO)
         return 0;
     else{
-        prof = 1 + profundidad(n->padre);
+        return 1 + profundidad(n->padre);
     }
-    return prof;
 }
 
 template <typename T>
@@ -173,7 +172,7 @@ inline int Abin<T>::altura(nodo n) const{
         altd = 1 + altura(n->hder);
     if(n->hizq != NODO_NULO)
         alti = 1 + altura(n->hizq);
-    return max(altd, alti);
+    return (altd > alti)? altd : alti ;
 }
 /*--------------------------------------------------------*//* Métodos privados *//*--------------------------------------------------------*/
 
