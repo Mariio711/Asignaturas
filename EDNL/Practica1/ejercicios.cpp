@@ -81,16 +81,7 @@ int desequilibrio (const Abin<tElto>& A){
 //ejercicio 7 - arbol pseudo completo
 template <typename tElto>
 bool pseudocompleto (const Abin<tElto>& A){
-    int n=0 ;
-    if(A.arbolVacio() != Abin<tElto>::NODO_NULO){
-        n = A.raiz();
-        while(A.hijoDrcho(n) != Abin<tElto>::NODO_NULO || A.hijoIzqdo(n) != Abin<tElto>::NODO_NULO){
-
-            //no se
-        }
-    }
-    else
-    return false;
+    return pseudocompleto_rec (A, A.raiz())
 }
 
 

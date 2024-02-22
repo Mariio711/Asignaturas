@@ -5,8 +5,8 @@ utilice la librería/módulo necesario para comprobar que los ficheros anterio
 import shutil
 import filecmp
 
-shutil.copy('./archivo_origen','./archivo_destino')
+shutil.copy('SD/PRACTICA_1/archivo_origen','SD/PRACTICA_1/archivo_destino')
 
-print(filecmp.cmp('/Users/mario/Repos_git/Asignaturas/SD/PRACTICA_1/archivo_origen','/Users/mario/Repos_git/Asignaturas/SD/PRACTICA_1/archivo_destino')) 
+print(filecmp.cmp('SD/PRACTICA_1/archivo_origen','SD/PRACTICA_1/archivo_destino')) 
 
 
