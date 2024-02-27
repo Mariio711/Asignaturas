@@ -145,6 +145,7 @@ Fecha Fecha::operator -(int a){
                         }else
                             dia_--;
     }
+    return *this;
 }
 //sobrecarga del operador +
 Fecha Fecha::operator +(int a){
@@ -172,5 +173,6 @@ Fecha Fecha::operator +(int a){
                             mes_++;
                         }else
                             dia_++;
-    }       
+    }     
+    return *this; 
 }
