@@ -13,11 +13,16 @@ public:
     static const int AnnoMinimo = 1902;
     Fecha(int d=0, int m=0, int a=0);
     Fecha(char* f);
-    void verificacion(int d, int m, int a);
-    Fecha operator ++();
-    Fecha operator --();
-    Fecha operator -(int a);
-    Fecha operator +(int a);
+    
+    Fecha& operator +=(int n);
+    Fecha& operator -=(int n);
+    Fecha& operator +(int n);
+    Fecha& operator -(int n);
+    Fecha& operator ++();
+    Fecha& operator ++(int);
+    Fecha& operator --();
+    Fecha& operator --(int);
+
 
     class Invalida{
         public:
@@ -29,7 +34,7 @@ public:
             const char* razon_;
     };
 private:
-
+    void verificacion();
     int dia_, mes_, anno_;
     std::time_t tiempo_calendario = std::time(nullptr);
     std::tm* tiempo_descompuesto = std::localtime(&tiempo_calendario);
