@@ -53,6 +53,10 @@ Fecha::Fecha(char* f){
     verificacion();
 }
 
+
+/*----------------------------operadores aritmeticos----------------------------------*/
+
+
 //operador de suma con asignacion += f=f+n
 Fecha& Fecha::operator+=(int n){
     //convertimos la fecha a un struct tm para usar mktime
@@ -129,3 +133,63 @@ Fecha& Fecha::operator--(int){
     return copia;
 }
 
+/*----------------------------operadores logicos----------------------------------*/
+
+//operador de igualdad ==
+bool Fecha::operator==(const Fecha& otra) const {
+    return dia_ == otra.dia_ && mes_ == otra.mes_ && anno_ == otra.anno_;
+}
+
+//operador menor-que <
+bool Fecha::operator<(const Fecha& otra) const {
+    if (anno_ > otra.anno_)
+        return false;
+    else
+        if(anno_ == otra.anno_ && mes_ > otra.mes_)
+            return false;
+        else
+            if(anno_ == otra.anno_ && mes_ == otra.mes_ && dia_ >= otra.dia_)
+                return false;
+            else
+                return true;
+}
+
+//operador !=
+bool Fecha::operator!=(const Fecha& otra) const{
+    return !(*this == otra);
+} 
+
+
+//operador >
+bool Fecha::operator>(const Fecha& otra) const{
+    return otra < *this;
+} 
+
+
+//operador <=
+bool Fecha::operator<=(const Fecha& otra) const{
+    return !(otra < *this);
+} 
+
+
+//operador >=
+bool Fecha::operator>=(const Fecha& otra) const{
+    return !(*this < otra);
+} 
+
+/*----------------------------metodos observadores----------------------------------*/
+
+//muestra el dia de la fecha
+const int Fecha::dia() const{
+    return this->dia_;
+}
+
+//muestra el mes de la fecha
+const int Fecha::mes() const{
+    return this->mes_;
+}
+
+//muestra el año de la fecha
+const int Fecha::anno() const{
+    return this->anno_;
+}

@@ -13,7 +13,8 @@ public:
     static const int AnnoMinimo = 1902;
     Fecha(int d=0, int m=0, int a=0);
     Fecha(char* f);
-    
+
+    //operadores aritmeticos
     Fecha& operator +=(int n);
     Fecha& operator -=(int n);
     Fecha& operator +(int n);
@@ -22,6 +23,19 @@ public:
     Fecha& operator ++(int);
     Fecha& operator --();
     Fecha& operator --(int);
+
+    //operadores logicos
+    bool operator ==(const Fecha& otra) const;
+    bool operator <(const Fecha& otra) const;
+    bool operator !=(const Fecha& otra) const;
+    bool operator >(const Fecha& otra) const;
+    bool operator <=(const Fecha& otra) const;
+    bool operator >=(const Fecha& otra) const;
+
+    //metodos observadores
+    const int dia() const;
+    const int mes() const;
+    const int anno() const;
 
 
     class Invalida{
