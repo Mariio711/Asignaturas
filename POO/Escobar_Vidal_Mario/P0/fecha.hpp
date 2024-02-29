@@ -9,8 +9,12 @@
 class Fecha {
 public:
 
+    //parametros
     static const int AnnoMaximo = 2037;
     static const int AnnoMinimo = 1902;
+    mutable char crep[36];
+
+    //constructores
     Fecha(int d=0, int m=0, int a=0);
     Fecha(char* f);
 
@@ -37,6 +41,9 @@ public:
     const int mes() const;
     const int anno() const;
 
+    //operadores de conversion
+    operator const char*() const;
+
 
     class Invalida{
         public:
@@ -52,6 +59,8 @@ private:
     int dia_, mes_, anno_;
     std::time_t tiempo_calendario = std::time(nullptr);
     std::tm* tiempo_descompuesto = std::localtime(&tiempo_calendario);
+    const char* dias[7] {"domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"};
+    const char* meses[12] {"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"};
 };
 
 #endif //Fecha_H
