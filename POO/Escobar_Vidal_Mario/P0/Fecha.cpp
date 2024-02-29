@@ -1,5 +1,6 @@
 #include "fecha.hpp"
 
+using namespace std;
 
 //funcion que verifica si el dia, el mes o el año son invalidos
 void Fecha::verificacion(){
@@ -86,7 +87,7 @@ Fecha& Fecha::operator+=(int n){
     anno_ = fecha_tm_ptr->tm_year + 1900;
 
     verificacion();
-
+    actual = false; //la fecha se ha actualizado por lo que ponemos actual a falso
     return *this;
 }
 
@@ -96,14 +97,14 @@ Fecha& Fecha::operator-=(int n){
 }
 
 //operador +
-Fecha& Fecha::operator +(int n){
+Fecha Fecha::operator +(int n){
     Fecha copia(*this); //creamos copia de la fecha
     copia += n; //usamos el operador += 
     return copia;
 }
 
 //operador -
-Fecha& Fecha::operator -(int n){
+Fecha Fecha::operator -(int n){
     Fecha copia(*this); //creamos copia de la fecha
     copia += -n; //usamos el operador += 
     return copia;
@@ -115,7 +116,7 @@ Fecha& Fecha::operator++(){
 }
 
 //operador ++ a la derecha (incremento postfijo)
-Fecha& Fecha::operator++(int){
+Fecha Fecha::operator++(int){
     Fecha copia(*this); //creamos copia de la fecha
     *this  += 1;
     return copia;
@@ -127,7 +128,7 @@ Fecha& Fecha::operator--(){
 }
 
 //operador -- a la derecha (incremento postfijo)
-Fecha& Fecha::operator--(int){
+Fecha Fecha::operator--(int){
     Fecha copia(*this); //creamos copia de la fecha
     *this  += -1;
     return copia;
@@ -197,32 +198,42 @@ const int Fecha::anno() const{
 /*sobrecarga del operador de conversion a const char*. */
 
 Fecha::operator const char*() const {
-    //convertimos la fecha a un struct tm para usar mktime
-    struct tm fecha_tm = {0}; //inicializamos a cero
-    fecha_tm.tm_mday = dia_;
-    fecha_tm.tm_mon = mes_ - 1;
-    fecha_tm.tm_year = anno_ - 1900 ;
-
-    // Usamos mktime para obtener el tiempo en segundos desde la época Unix (1 de enero de 1970)
-    // y luego lo convertimos a un struct tm local con localtime
-    time_t tiempo = mktime(&fecha_tm);
-    struct tm* tiempo_local = localtime(&tiempo);
+    if(actual == true){
+        return this->crep;
+    }else{
+        //convertimos la fecha a un struct tm para usar mktime
+        struct tm fecha_tm = {0}; //inicializamos a cero
+        fecha_tm.tm_mday = dia_;
+        fecha_tm.tm_mon = mes_ - 1;
+        fecha_tm.tm_year = anno_ - 1900 ;
     
-    //convertimos el tiempo local a cadena de texto formateada con strftime (tiene muchas opciones mirar documentación)
-    char fecha_str[36];
-    strftime(fecha_str, 36, "%w %d %m %Y", tiempo_local);
+        // Usamos mktime para obtener el tiempo en segundos desde la época Unix (1 de enero de 1970)
+        // y luego lo convertimos a un struct tm local con localtime
+        time_t tiempo = mktime(&fecha_tm);
+        struct tm* tiempo_local = localtime(&tiempo);
+        
+        //convertimos el tiempo local a cadena de texto formateada con strftime (tiene muchas opciones mirar documentación)
+        char fecha_str[36];
+        strftime(fecha_str, 36, "%w %d %m %Y", tiempo_local);
+    
+        //ahora leemos la fecha_str formateada y almacenamos sus campos en variables temporales segun lo hayamos formateado
+        //en este caso el formato es "%w %d %m %Y" que significa "dia_semana dia_mes mes año
+        int dia_semana, dia, mes, anno;
+        sscanf(fecha_str, "%d %d %d %d", &dia_semana, &dia, &mes, &anno);
+    
+        //luego formateamos la cadena de salida con el formato deseado, la almacenamos en el crep y la devolvemos 
+        char mes_str[10];
+        char dia_str[10];
+        strcpy(dia_str, Fecha::dias[dia_semana]);
+        strcpy(mes_str, Fecha::meses[mes - 1]);
+        sprintf(crep, "%s %d de %s de %d", dia_str, dia, mes_str, anno);
+    
+        //actualizamos el valor del booleano de actualizacion a true
+        actual = true;
+        return crep;
+    }
 
-    //ahora leemos la fecha_str formateada y almacenamos sus campos en variables temporales segun lo hayamos formateado
-    //en este caso el formato es "%w %d %m %Y" que significa "dia_semana dia_mes mes año
-    int dia_semana, dia, mes, anno;
-    sscanf(fecha_str, "%d %d %d %d", &dia_semana, &dia, &mes, &anno);
 
-    //luego formateamos la cadena de salida con el formato deseado, la almacenamos en el crep y la devolvemos 
-    char mes_str[10];
-    char dia_str[10];
-    strcpy(dia_str, Fecha::dias[dia_semana]);
-    strcpy(mes_str, Fecha::meses[mes - 1]);
-    sprintf(crep, "%s %d de %s de %d", dia_str, dia, mes_str, anno);
 
-    return crep;
+    
 }

@@ -2,7 +2,7 @@
 #define Fecha_H
 
 #include <iostream>
-#include <string>
+#include <cstring>
 #include <ctime>
 #include <cassert>
 
@@ -12,7 +12,7 @@ public:
     //parametros
     static const int AnnoMaximo = 2037;
     static const int AnnoMinimo = 1902;
-    mutable char crep[36];
+    mutable char crep[36]{};
 
     //constructores
     Fecha(int d=0, int m=0, int a=0);
@@ -21,12 +21,12 @@ public:
     //operadores aritmeticos
     Fecha& operator +=(int n);
     Fecha& operator -=(int n);
-    Fecha& operator +(int n);
-    Fecha& operator -(int n);
+    Fecha operator +(int n);
+    Fecha operator -(int n);
     Fecha& operator ++();
-    Fecha& operator ++(int);
+    Fecha operator ++(int);
     Fecha& operator --();
-    Fecha& operator --(int);
+    Fecha operator --(int);
 
     //operadores logicos
     bool operator ==(const Fecha& otra) const;
@@ -61,6 +61,7 @@ private:
     std::tm* tiempo_descompuesto = std::localtime(&tiempo_calendario);
     const char* dias[7] {"domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"};
     const char* meses[12] {"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"};
+    mutable bool actual {false};
 };
 
 #endif //Fecha_H
