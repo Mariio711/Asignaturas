@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <queue>
 
 #include "abin.h"
 #include "abin_E-S.h"
@@ -78,12 +79,57 @@ int desequilibrio (const Abin<tElto>& A){
     return (niveld > niveli)? niveld : niveli;
 }
 
-//ejercicio 7 - arbol pseudo completo
+//ejercicio 7 - arbol pseudocompleto
 template <typename tElto>
-bool pseudocompleto (const Abin<tElto>& A){
-    return pseudocompleto_rec (A, A.raiz())
+bool pseudocompletocola (const Abin<tElto>& A){
+        if (A.arbolVacioB()) {
+        return true;
+    }
+
+    std::queue<typename Abin<tElto>::nodo> cola;
+    cola.push(A.raiz());
+
+    bool bandera = false; // Se activa cuando encontramos un nodo que no tiene dos hijos
+
+    while (!cola.empty()) {
+        typename Abin<tElto>::nodo nodoActual = cola.front();
+        cola.pop();
+
+        if (A.hijoIzqdo(nodoActual) != Abin<tElto>::NODO_NULO) {
+            if (bandera) { // Si encontramos un nodo con hijo después de un nodo sin dos hijos
+                return false;
+            }
+            cola.push(A.hijoIzqdo(nodoActual));
+        } else {
+            bandera = true; // Este nodo no tiene hijo izquierdo
+        }
+
+        if (A.hijoDrcho(nodoActual) != Abin<tElto>::NODO_NULO) {
+            if (bandera) { // Si encontramos un nodo con hijo después de un nodo sin dos hijos
+                return false;
+            }
+            cola.push(A.hijoDrcho(nodoActual));
+        } else {
+            bandera = true; // Este nodo no tiene hijo derecho
+        }
+    }
+
+    return bandera;
 }
 
+template <typename tElto>
+bool pseudocompletonocola(const Abin<tElto>& A, typename Abin<tElto>::nodo n = Abin<tElto>::NODO_NULO) {
+    if (n == Abin<tElto>::NODO_NULO) {
+        return true;
+    }
+
+    if ((A.hijoIzqdo(n) != Abin<tElto>::NODO_NULO && A.hijoDrcho(n) == Abin<tElto>::NODO_NULO) ||
+        (A.hijoIzqdo(n) == Abin<tElto>::NODO_NULO && A.hijoDrcho(n) != Abin<tElto>::NODO_NULO)) {
+        return false;
+    }
+
+    return pseudocompletonocola(A, A.hijoIzqdo(n)) && pseudocompletonocola(A, A.hijoDrcho(n));
+}
 
 int main(){
     Abin<tElto> A, B;
