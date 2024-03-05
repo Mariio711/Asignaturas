@@ -42,8 +42,5 @@ Cadena& Cadena::operator=(const Cadena& otra){
         //si la asignacion de memoria fue exitosa
         delete[] s_;
         s_ = nueva_s;
-        
-
-    } 
-        
+    }  
 }

@@ -181,17 +181,17 @@ bool Fecha::operator>=(const Fecha& otra) const{
 /*----------------------------metodos observadores----------------------------------*/
 
 //muestra el dia de la fecha
-const int Fecha::dia() const{
+int Fecha::dia() const{
     return this->dia_;
 }
 
 //muestra el mes de la fecha
-const int Fecha::mes() const{
+int Fecha::mes() const{
     return this->mes_;
 }
 
 //muestra el año de la fecha
-const int Fecha::anno() const{
+int Fecha::anno() const{
     return this->anno_;
 }
 

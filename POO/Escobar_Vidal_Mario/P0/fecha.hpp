@@ -37,9 +37,9 @@ public:
     bool operator >=(const Fecha& otra) const;
 
     //metodos observadores
-    const int dia() const;
-    const int mes() const;
-    const int anno() const;
+    int dia() const;
+    int mes() const;
+    int anno() const;
 
     //operadores de conversion
     operator const char*() const;
