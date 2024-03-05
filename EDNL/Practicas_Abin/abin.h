@@ -2,40 +2,41 @@
 #define ABIN_H
 #include <cassert>
 template <typename T> class Abin {
-struct celda; // Declaración adelantada privada
+    struct celda; // Declaración adelantada privada
 public:
-typedef celda* nodo;
-static const nodo NODO_NULO;
-Abin(); // Constructor
-void insertarRaiz(const T& e);
-void insertarHijoIzqdo(nodo n, const T& e);
-void insertarHijoDrcho(nodo n, const T& e);
-void eliminarHijoIzqdo(nodo n);
-void eliminarHijoDrcho(nodo n);
-void eliminarRaiz();
-int profundidad(nodo n) const; //profundidad de un nodo (ej5 p1)
-int altura(nodo n) const; //altura de un nodo (ej5 p1)
-bool arbolVacio() const;
-const T& elemento(nodo n) const; // Lec. en Abin const
-T& elemento(nodo n); // Lec/Esc. en Abin no-const
-nodo raiz() const;
+    typedef celda* nodo;
+    static const nodo NODO_NULO;
+    Abin(); // Constructor
+    void insertarRaiz(const T& e);
+    void insertarHijoIzqdo(nodo n, const T& e);
+    void insertarHijoDrcho(nodo n, const T& e);
+    void eliminarHijoIzqdo(nodo n);
+    void eliminarHijoDrcho(nodo n);
+    void eliminarRaiz();
+    int profundidad(nodo n) const; //profundidad de un nodo (ej5 p1)
+    int altura(nodo n) const; //altura de un nodo (ej5 p1)
+    bool arbolVacio() const;
+    const T& elemento(nodo n) const; // Lec. en Abin const
+    T& elemento(nodo n); // Lec/Esc. en Abin no-const
+    nodo raiz() const;
+    nodo padre(nodo n) const;
+    nodo hijoIzqdo(nodo n) const;
+    nodo hijoDrcho(nodo n) const;
+    Abin(const Abin<T>& a); // Ctor. de copia
+    Abin<T>& operator =(const Abin<T>& A); // Asig. de árboles
+    ~Abin(); // Destructor
 
-nodo padre(nodo n) const;
-nodo hijoIzqdo(nodo n) const;
-nodo hijoDrcho(nodo n) const;
-Abin(const Abin<T>& a); // Ctor. de copia
-Abin<T>& operator =(const Abin<T>& A); // Asig. de árboles
-~Abin(); // Destructor
 private:
-struct celda {
-T elto;
-nodo padre, hizq, hder;
-celda(const T& e, nodo p = NODO_NULO): elto(e),
-padre(p), hizq(NODO_NULO), hder(NODO_NULO) {}
+    struct celda {
+        T elto;
+        nodo padre, hizq, hder;
+        celda(const T& e, nodo p = NODO_NULO): elto(e),
+        padre(p), hizq(NODO_NULO), hder(NODO_NULO) {}
+    };
+    nodo r; // nodo raíz del árbol
+    void destruirNodos(nodo& n);
+    nodo copiar(nodo n);
 };
-nodo r; // nodo raíz del árbol
-void destruirNodos(nodo& n);
-nodo copiar(nodo n);};
 
 /* Definición del nodo nulo */
 template <typename T>

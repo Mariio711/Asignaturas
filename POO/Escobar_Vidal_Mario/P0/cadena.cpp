@@ -44,3 +44,4 @@ Cadena& Cadena::operator=(const Cadena& otra){
         s_ = nueva_s;
     }  
 }
+

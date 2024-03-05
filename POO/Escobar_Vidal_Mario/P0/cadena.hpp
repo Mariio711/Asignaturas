@@ -20,4 +20,4 @@ class Cadena{
 };
 
 char Cadena::vacio[1] = {'\0'}; // Inicialización del caracter terminador de la cadena
-#endif
+#endif 

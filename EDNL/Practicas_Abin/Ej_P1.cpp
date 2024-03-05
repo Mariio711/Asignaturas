@@ -130,20 +130,3 @@ bool pseudocompletonocola(const Abin<tElto>& A, typename Abin<tElto>::nodo n = A
 
     return pseudocompletonocola(A, A.hijoIzqdo(n)) && pseudocompletonocola(A, A.hijoDrcho(n));
 }
-
-int main(){
-    Abin<tElto> A, B;
-    ifstream fe("abin.dat"); // Abrir fichero de entrada.
-    rellenarAbin(fe, A); // Desde fichero.
-    fe.close();
-    cout << "\n*** Mostrar árbol binario B ***\n";
-    imprimirAbin(A); // En std::cout
-
-    cout << "numero de nodos(A)= " << numeronodos(A) << endl; //numero de nodos
-
-    cout << "altura(A)= " << altura(A) << endl; //altura del arbol
-
-    cout << "profundidad de un nodo dado" << profundidad(A, A.hijoIzqdo(A.raiz())) << endl; //profundidad de un nodo
-    system("pause");
-}
-
