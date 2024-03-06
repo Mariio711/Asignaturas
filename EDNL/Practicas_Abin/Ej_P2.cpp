@@ -54,4 +54,38 @@ Abin<tElto> AbinRef(const Abin<tElto>& A){
  Dentro del árbol binario los nodos hojas contendrán los operandos,
  y el resto de los nodos los operadores. a) Define el tipo de los elementos del árbol 
  para que los nodos puedan almacenar operadores y operandos.*/
- 
+enum Tipo { OPERANDO, OPERADOR };
+
+struct Elemento {
+    Tipo tipo;
+    union {
+        char operador;
+        double operando;
+    } dato;
+};
+
+double evaluarExpresion_Rec(const Abin<Elemento>& A, Abin<Elemento>::nodo n) {
+    if (A.hijoIzqdo(n) == Abin<Elemento>::NODO_NULO && A.hijoDrcho(n) == Abin<Elemento>::NODO_NULO) {
+        // Es un nodo hoja, por lo tanto es un operando
+        return A.elemento(n).dato.operando;
+    } else {
+        // Es un nodo interno, por lo tanto es un operador
+        double izq = evaluarExpresion_Rec(A, A.hijoIzqdo(n));
+        double der = evaluarExpresion_Rec(A, A.hijoDrcho(n));
+        switch (A.elemento(n).dato.operador) {
+            case '+': return izq + der;
+            case '-': return izq - der;
+            case '*': return izq * der;
+            case '/': return izq / der; // Asegúrate de que der no sea 0
+            default: return 0; // O maneja el error como prefieras
+        }
+    }
+}
+
+double evaluarExpresion(const Abin<Elemento>& A) {
+    if (!A.arbolVacio()) {
+        return evaluarExpresion_Rec(A, A.raiz());
+    } else {
+        return 0; // O maneja el error como prefieras
+    }
+}

@@ -8,7 +8,7 @@
 using namespace std;
 
 typedef char tElto;
-const tElto fin = '#';
+const tElto fin = ' ';
 
 
 //Ejercicio 1 - Calcular el numero de nodos de un arbol binario. 
@@ -65,8 +65,21 @@ int profundidad(const Abin<tElto>& A, typename Abin<tElto>::nodo n){
 
 //Ejercicio 6 - nivel de desequilibrio de un arbol binario
 //mirar el propio desequilibrio del nodo hay que tener en cuenta todo.
+
+
+int max3(int a, int b, int c) {
+    return max(max(a, b), c);
+}
+
 template <typename tElto>
-int desquilibriollamada(const Abin<tElto>& A){
+int dif_alt(const Abin<tElto>& A, typename Abin<tElto>::nodo n) {
+    int hizq = altura_Rec(A, A.hijoIzqdo(n));
+    int hder = altura_Rec(A, A.hijoDrcho(n));
+    return abs(hizq - hder);
+}
+
+template <typename tElto>
+int desequilibriollamada(const Abin<tElto>& A){
     return desequilibrio(A, A.raiz());
 }
 
@@ -78,6 +91,8 @@ int desequilibrio (const Abin<tElto>& A, typename Abin<tElto>::nodo n){
         return max3(dif_alt(A, n), desequilibrio(A, A.hijoDrcho(n)), desequilibrio(A, A.hijoIzqdo(n))); //hay que implemantar max3 y dif_alt
     }
 }
+
+
 
 //ejercicio 7 - arbol pseudocompleto implemantar las tres formsa una no se le pasa nada otra la altura y otra la altura y profundidad
 template <typename tElto>
@@ -116,17 +131,28 @@ bool pseudocompletocola (const Abin<tElto>& A){
 
     return bandera;
 }
+int num_hijos(const Abin<tElto>& A, typename Abin<tElto>::nodo n) {
+    int count = 0;
+    if (A.hijoIzqdo(n) != Abin<tElto>::NODO_NULO) {
+        count++;
+    }
+    if (A.hijoDrcho(n) != Abin<tElto>::NODO_NULO) {
+        count++;
+    }
+    return count;
+}
 
 bool pseudocompleto_Rec(const Abin<tElto>& A, typename Abin<tElto>::nodo n){
-    if(A.altura(n) == 1){
-        return num_hijos(A, n) == 2; //implementar  num_hijos
-    }else{
-        if(A.altura(A.hijoIzqdo(n)) > A.altura(A.hijoDrcho(n)))
+
+    if (A.altura(n) == 1) {
+        return num_hijos(A, n) == 2;
+    } else {
+        if (A.altura(A.hijoIzqdo(n)) > A.altura(A.hijoDrcho(n))) {
             return pseudocompleto_Rec(A, A.hijoIzqdo(n));
-        else{
-            if(A.altura(A.hijoIzqdo(n)) < A.altura(A.hijoDrcho(n)))
+        } else {
+            if (A.altura(A.hijoIzqdo(n)) < A.altura(A.hijoDrcho(n))) {
                 return pseudocompleto_Rec(A, A.hijoDrcho(n));
-            else{
+            } else {
                 // Si las alturas son iguales, verifica ambos hijos
                 return pseudocompleto_Rec(A, A.hijoIzqdo(n)) && pseudocompleto_Rec(A, A.hijoDrcho(n));
             }
