@@ -5,11 +5,17 @@ class Cadena{
 
         //constructores
         Cadena(int tam = 0, char s = ' '); //con dos parametros, los demas se consctruiran a partir de este
-        Cadena(char* s); //a partir de una cadena de bajo nivel
+        Cadena(const char* s); //a partir de una cadena de bajo nivel
 
         //sobrecarga de operadores
         Cadena& operator=(const Cadena& otra); //sobrecarga del operador de asignacion para otra clase cadena
         Cadena& operator=(const char* s); //sobrecarga del operador de asignacion para otra clase cadena
+        
+        //sobrecarga de operadores de conversion
+        explicit operator const char*() const;
+
+        //metodos observadores
+        int length();
     private:
         
         //atributos

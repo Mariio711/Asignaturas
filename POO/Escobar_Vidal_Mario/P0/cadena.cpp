@@ -21,9 +21,9 @@ Cadena::Cadena(int tam, char s){
 }
 
 //constructor a partir de una cadena de bajo nivel
-Cadena::Cadena(char* s){
+Cadena::Cadena(const char* s){
     s_ = new char[strlen(s)+1]; //asignamos memoria dinamica del tamaño de la cadena dada mas un espacio para el caracter termiandor
-    strcpy(s, s_); //copiamos la cadena de s en s_ 
+    strcpy(s_, s); //copiamos la cadena de s en s_ 
     tam_ = strlen(s_); //asignamos el tamaño a la instancia de la cadena
 }
 
@@ -32,7 +32,7 @@ Cadena& Cadena::operator=(const Cadena& otra){
     if (this != &otra){ //evitar la auto asignaicon
         char* nueva_s = nullptr;
 
-        //si no hay suficiente memoria nos e realiza la asignacion
+        //si no hay suficiente memoria no se realiza la asignacion
         try{
             nueva_s = new char[otra.tam_ + 1]; // asignamos memoria
         }catch(const std::bad_alloc&){
@@ -40,8 +40,44 @@ Cadena& Cadena::operator=(const Cadena& otra){
         }
 
         //si la asignacion de memoria fue exitosa
+        strcpy(nueva_s, otra.s_);
+        nueva_s[otra.tam_] = '\0';
+
+        //liberamos la memoria antigua y actualizamos los miembros
         delete[] s_;
         s_ = nueva_s;
+        tam_ = otra.tam_;
     }  
+    return *this;
 }
 
+
+//sobrecarga de operador de asignacion (=) para una cadena de bajo nivel
+Cadena& Cadena::operator=(const char* s){
+    char* nueva_s = nullptr;
+
+    //si no hay suficiente memoria no se realiza la asignacion
+    try{
+        nueva_s = new char[strlen(s) + 1]; // asignamos memoria
+    }catch(const std::bad_alloc&){
+        return *this;
+    }
+
+    //si la asignacion de memoria fue exitosa
+    strcpy(nueva_s, s);
+    nueva_s[strlen(s) + 1] = '\0';
+
+    //liberamos la memoria antigua y actualizamos los miembros
+    delete[] s_;
+    s_ = nueva_s;
+    tam_ = strlen(s) + 1;
+    return *this;
+}  
+
+explicit Cadena::operator const char *() const{
+    return (tam_ > 0) ? s_ : vacio;
+}
+
+int Cadena::length(){
+    return tam_;
+}
