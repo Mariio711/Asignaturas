@@ -7,6 +7,7 @@
 *.exe
 *.dll
 *.so
+*.o
 
 # Ignore build output
 /build/
