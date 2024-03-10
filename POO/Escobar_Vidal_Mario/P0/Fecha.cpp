@@ -48,7 +48,7 @@ Fecha::Fecha(int d, int m, int a){
 }
 
 //constructor con un parametro de tipo char*
-Fecha::Fecha(char* f){
+Fecha::Fecha(const char* f){
     int dia, mes, anno;
 
     if(sscanf(f, "%d/%d/%d", &dia, &mes, &anno) != 3){
@@ -114,14 +114,14 @@ Fecha& Fecha::operator-=(int n){
 }
 
 //operador +
-Fecha Fecha::operator +(int n){
+Fecha Fecha::operator +(int n) const{
     Fecha copia(*this); //creamos copia de la fecha
     copia += n; //usamos el operador += 
     return copia;
 }
 
 //operador -
-Fecha Fecha::operator -(int n){
+Fecha Fecha::operator -(int n) const{
     Fecha copia(*this); //creamos copia de la fecha
     copia += -n; //usamos el operador += 
     return copia;

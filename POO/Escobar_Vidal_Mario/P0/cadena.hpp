@@ -12,20 +12,21 @@ class Cadena{
 
         //sobrecarga de operadores
         Cadena& operator=(const Cadena& otra); //sobrecarga del operador de asignacion para otra clase cadena
-        Cadena& operator=(const char* s); //sobrecarga del operador de asignacion para otra clase cadena
+        Cadena& operator=(const char* s); //sobrecarga del operador de asignacion para cadena de bajo nivel
         Cadena& operator+=(const Cadena& otra);//sobrecarga del operador de suma con asignacion
-        Cadena operator+(const Cadena& otra);//sobrecarga del operador de suma
-        
+        friend Cadena operator+(const Cadena& c1, const Cadena& c2);//sobrecarga del operador de suma
+
         //sobrecarga de operadores de conversion
         explicit operator const char*() const;
 
         //sobrecarga de operadores logicos
-        bool operator ==(const Cadena& otra) const;
-        bool operator !=(const Cadena& otra) const;
-        bool operator <(const Cadena& otra) const;
-        bool operator >(const Cadena& otra) const;
-        bool operator <=(const Cadena& otra) const;
-        bool operator >=(const Cadena& otra) const;
+        friend bool operator==(const Cadena& c1, const Cadena& c2);
+        friend bool operator==(const char* str, const Cadena& c);
+        friend bool operator!=(const Cadena& c1, const Cadena& c2);
+        friend bool operator<(const Cadena& c1, const Cadena& c2);
+        friend bool operator>(const Cadena& c1, const Cadena& c2);
+        friend bool operator<=(const Cadena& c1, const Cadena& c2);
+        friend bool operator>=(const Cadena& c1, const Cadena& c2);
 
         //sobrecarga de operador de indice
         char& operator[](int unsigned indice); // devuelve el caracter al que apunta la posicion del indice
@@ -33,7 +34,7 @@ class Cadena{
         char& at(int unsigned indice) const; // devuelve el caracter al que apunta la posicion del indice
         
         //metodos observadores
-        int length() const; //devuelve el tamaño de la cadena
+        size_t length() const; //devuelve el tamaño de la cadena
 
         const Cadena substr(int unsigned indice, int unsigned tam) const; //devuelve un substring de la cadena conla que se llama a partir del indice y el tamaño
         

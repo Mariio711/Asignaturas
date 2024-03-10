@@ -89,7 +89,7 @@ Cadena::operator const char *() const{
 
 
 
-int Cadena::length() const{
+size_t Cadena::length() const{
     return tam_;
 }
 
@@ -116,65 +116,40 @@ Cadena& Cadena::operator+=(const Cadena& otra){
     return *this;
 }
 
-//sobrecarga del operador de suma
-Cadena Cadena::operator+(const Cadena& otra){
-    int nueva_longitud = tam_ + otra.tam_ + 1;
-    char* nueva_s = nullptr;
-
-    //si no hay suficiente memoria no se realiza la asignacion
-    try{
-        nueva_s = new char[nueva_longitud]; // asignamos memoria
-    }catch(const std::bad_alloc&){
-        throw; // Lanzamos la excepción hacia arriba
-    }
-
-    //si la asignacion de memoria fue exitosa
-    strcpy(nueva_s, s_);
-    strcat(nueva_s, otra.s_);
-
-    // Creamos una nueva Cadena con la cadena concatenada
-    Cadena nueva_cadena(nueva_longitud - 1);
-    strcpy(nueva_cadena.s_, nueva_s);
-
-    // Liberamos la memoria temporal
-    delete[] nueva_s;
-
+//operador de suma si alguno de lso dos no es cadena
+Cadena operator+(const Cadena& c1, const Cadena& c2) {
+    Cadena nueva_cadena = c1; // Copiamos c1
+    nueva_cadena += c2; // Usamos el operador += para agregar c2
     return nueva_cadena;
 }
 
-//sobrecarga del operador de igualdad
-bool Cadena::operator ==(const Cadena& otra) const{
-    return strcmp(s_, otra.s_) == 0;
+
+bool operator==(const Cadena& c1, const Cadena& c2) {
+    return strcmp(c1.s_, c2.s_) == 0;
 }
 
-//sobrecarga del operador de igualdad (cadena primero)
-bool operator ==(const char* str, const Cadena& cadena){
-    return cadena == str;
+bool operator==(const char* str, const Cadena& c) {
+    return strcmp(str, c.s_) == 0;
 }
 
-//sobrecarga del operador distinto
-bool Cadena::operator !=(const Cadena& otra) const{
-    return strcmp(s_, otra.s_) != 0;
+bool operator!=(const Cadena& c1, const Cadena& c2) {
+    return strcmp(c1.s_, c2.s_) != 0;
 }
 
-//sobrecarga del operador menor que
-bool Cadena::operator <(const Cadena& otra) const{
-    return strcmp(s_, otra.s_) < 0;
+bool operator<(const Cadena& c1, const Cadena& c2) {
+    return strcmp(c1.s_, c2.s_) < 0;
 }
 
-//sobrecarga del operador mayor que
-bool Cadena::operator >(const Cadena& otra) const{
-    return strcmp(s_, otra.s_) > 0;
+bool operator>(const Cadena& c1, const Cadena& c2) {
+    return strcmp(c1.s_, c2.s_) > 0;
 }
 
-//sobrecarga del operador menor igual
-bool Cadena::operator <=(const Cadena& otra) const{
-    return strcmp(s_, otra.s_) <= 0;
+bool operator<=(const Cadena& c1, const Cadena& c2) {
+    return strcmp(c1.s_, c2.s_) <= 0;
 }
 
-//sobrecarga del operador mayor igual
-bool Cadena::operator >=(const Cadena& otra) const{
-    return strcmp(s_, otra.s_) >= 0;
+bool operator>=(const Cadena& c1, const Cadena& c2) {
+    return strcmp(c1.s_, c2.s_) >= 0;
 }
 
 //sobrecarga del operador de indice

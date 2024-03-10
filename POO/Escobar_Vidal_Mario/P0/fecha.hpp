@@ -16,13 +16,13 @@ public:
 
     //constructores
     Fecha(int d = 0, int m = 0, int a = 0);
-    Fecha(char* f);
+    Fecha(const char* f);
 
     //operadores aritmeticos
     Fecha& operator +=(int n);
     Fecha& operator -=(int n);
-    Fecha operator +(int n);
-    Fecha operator -(int n);
+    Fecha operator +(int n)const;
+    Fecha operator -(int n)const;
     Fecha& operator ++();
     Fecha operator ++(int);
     Fecha& operator --();
