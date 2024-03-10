@@ -89,7 +89,7 @@ Cadena::operator const char *() const{
 
 
 
-int Cadena::length()const{
+int Cadena::length() const{
     return tam_;
 }
 
@@ -195,14 +195,14 @@ const char& Cadena::operator[](int unsigned indice) const {
 }
 
 // devuelve el caracter al que apunta la posicion del indice
-char& Cadena::at(int unsigned indice){
+char& Cadena::at(int unsigned indice)const{
     if (indice >= tam_) {
         throw std::out_of_range("Índice fuera de rango");
     }
     return s_[indice];
 }
 
-Cadena Cadena::substr(unsigned int indice, unsigned int tam){
+const Cadena Cadena::substr(unsigned int indice, unsigned int tam)const{
     if (indice >= tam_ || tam > tam_ - indice) {
         throw std::out_of_range("Índice fuera de rango");
     }

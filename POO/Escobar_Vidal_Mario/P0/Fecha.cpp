@@ -2,25 +2,33 @@
 
 using namespace std;
 
-//funcion que verifica si el dia, el mes o el año son invalidos
-void Fecha::verificacion(){
-    if(anno_ < AnnoMinimo || anno_ > AnnoMaximo){
-        throw Invalida("Año invalido");
+//funcion que verifica si el dia es invalido
+void Fecha::verificarDia(int dia){
+    if(dia < 1 || dia > 31){
+        throw Invalida("Dia invalido");
     }
-    if(mes_ < 1 || mes_ > 12){
+    if(dia > 30 && (mes_ == 4 || mes_ == 6 || mes_ == 9 || mes_ == 11)){
+        throw Invalida("Dia invalido");
+    }
+    if(mes_ == 2 && dia > 29){
+        throw Invalida("Dia invalido");
+    }
+    if(mes_ == 2 && dia == 29 && !(anno_%4 == 0 && (anno_%100 != 0 || anno_%400 == 0))){
+        throw Invalida("Dia invalido");
+    }
+}
+
+//funcion que verifica si el mes es invalido
+void Fecha::verificarMes(int mes){
+    if(mes < 1 || mes > 12){
         throw Invalida("Mes invalido");
     }
-    if(dia_ < 1 || dia_ > 31){
-        throw Invalida("Dia invalido");
-    }
-    if(dia_ > 30 && (mes_ == 4 || mes_ == 6 || mes_ == 9 || mes_ == 11)){
-        throw Invalida("Dia invalido");
-    }
-    if(mes_ == 2 && dia_ > 29){
-        throw Invalida("Dia invalido");
-    }
-    if(mes_ == 2 && dia_ == 29 && !(anno_%4 == 0 && (anno_%100 != 0 || anno_%400 == 0))){
-        throw Invalida("Dia invalido");
+}
+
+//funcion que verifica si el anno es invalido
+void Fecha::verificarAnno(int anno){
+    if(anno < AnnoMinimo || anno > AnnoMaximo){
+        throw Invalida("Año invalido");
     }
 }
 
@@ -34,7 +42,9 @@ Fecha::Fecha(int d, int m, int a){
     anno_ = (a == 0) ? tiempo_descompuesto->tm_year+1900 : a;
 
     //excepcion si el dia, el mes o el año son invalidos
-    verificacion();
+    verificarDia(d);
+    verificarMes(m);
+    verificarAnno(a);
 }
 
 //constructor con un parametro de tipo char*
@@ -45,13 +55,16 @@ Fecha::Fecha(char* f){
         throw Invalida("Formato incorrecto");
     }
 
+    //excepcion si el dia, el mes o el año son invalidos
+    verificarDia(dia);
+    verificarMes(mes);
+    verificarAnno(anno);
+
     //constuccion de la Fecha
     dia_ = dia;
     mes_ = mes;
     anno_ = anno;
     
-    //excepcion si el dia, el mes o el año son invalidos
-    verificacion();
 }
 
 
@@ -61,7 +74,7 @@ Fecha::Fecha(char* f){
 //operador de suma con asignacion += f=f+n
 Fecha& Fecha::operator+=(int n){
     //convertimos la fecha a un struct tm para usar mktime
-    struct tm fecha_tm = {0}; //inicializamos a cero
+    struct tm fecha_tm; //inicializamos a cero
     fecha_tm.tm_mday = dia_;
     fecha_tm.tm_mon = mes_ - 1;
     fecha_tm.tm_year = anno_ - 1900 ;
@@ -81,12 +94,16 @@ Fecha& Fecha::operator+=(int n){
         throw std::runtime_error("localtime falló");
     }
 
+    //verificaciones
+    verificarDia(fecha_tm_ptr->tm_mday);
+    verificarMes(fecha_tm_ptr->tm_mon + 1);
+    verificarAnno(fecha_tm_ptr->tm_year + 1900);
+
     //re asignamos los valores de la fecha_tm_ptr (ya actualizada) a la fecha (this)
     dia_ = fecha_tm_ptr->tm_mday;
     mes_ = fecha_tm_ptr->tm_mon + 1 ;
     anno_ = fecha_tm_ptr->tm_year + 1900;
 
-    verificacion();
     actual = false; //la fecha se ha actualizado por lo que ponemos actual a falso
     return *this;
 }
@@ -202,7 +219,7 @@ Fecha::operator const char*() const {
         return this->crep;
     }else{
         //convertimos la fecha a un struct tm para usar mktime
-        struct tm fecha_tm = {0}; //inicializamos a cero
+        struct tm fecha_tm; //inicializamos a cero
         fecha_tm.tm_mday = dia_;
         fecha_tm.tm_mon = mes_ - 1;
         fecha_tm.tm_year = anno_ - 1900 ;

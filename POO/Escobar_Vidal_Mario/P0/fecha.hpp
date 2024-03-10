@@ -15,7 +15,7 @@ public:
     mutable char crep[36]{};
 
     //constructores
-    Fecha(int d=0, int m=0, int a=0);
+    Fecha(int d = 0, int m = 0, int a = 0);
     Fecha(char* f);
 
     //operadores aritmeticos
@@ -55,7 +55,9 @@ public:
             const char* razon_;
     };
 private:
-    void verificacion();
+    void verificarDia(int);
+    void verificarMes(int);
+    void verificarAnno(int);
     int dia_, mes_, anno_;
     std::time_t tiempo_calendario = std::time(nullptr);
     std::tm* tiempo_descompuesto = std::localtime(&tiempo_calendario);

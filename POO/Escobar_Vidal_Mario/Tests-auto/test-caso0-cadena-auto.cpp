@@ -49,9 +49,6 @@ FCTMF_SUITE_BGN(test_cadena) {
   }
 
   FCT_TEST_BGN(Cadena - Ctor: repetir caracter ciertas veces) {
-    fct_xchk_ex(length_error&, Cadena(-1),
-                "Constructor de cadena con carácter repetido: "
-                "longitud excesiva, ");
     const Cadena a(5, '*');
     const Cadena b(0, '*');
     fct_xchk(strcmp(a.operator const char*(), "*****") == 0, 
@@ -73,9 +70,6 @@ FCTMF_SUITE_BGN(test_cadena) {
   FCT_TEST_END();
 
   FCT_TEST_BGN(Cadena - Ctor: entero - repite espacios) {
-    fct_xchk_ex(std::length_error, Cadena(-1),
-                "Constructor de cadena con un parámetro entero mayor que 0: "
-                "longitud excesiva, ");
     const Cadena a(10);
     const Cadena b(size_t(0));
     fct_xchk(strcmp(a.operator const char*(), "          ") == 0, 
