@@ -42,9 +42,9 @@ Fecha::Fecha(int d, int m, int a){
     anno_ = (a == 0) ? tiempo_descompuesto->tm_year+1900 : a;
 
     //excepcion si el dia, el mes o el año son invalidos
-    verificarDia(d);
-    verificarMes(m);
-    verificarAnno(a);
+    verificarDia(dia_);
+    verificarMes(mes_);
+    verificarAnno(anno_);
 }
 
 //constructor con un parametro de tipo char*
