@@ -12,10 +12,9 @@ public:
     //parametros
     static const int AnnoMaximo = 2037;
     static const int AnnoMinimo = 1902;
-    mutable char crep[36]{};
 
     //constructores
-    Fecha(int d = 0, int m = 0, int a = 0);
+    explicit Fecha(int d = 0, int m = 0, int a = 0);
     Fecha(const char* f);
 
     //operadores aritmeticos
@@ -63,6 +62,7 @@ private:
     std::tm* tiempo_descompuesto = std::localtime(&tiempo_calendario);
     const char* dias[7] {"domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"};
     const char* meses[12] {"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"};
+    mutable char crep[37]{};
     mutable bool actual {false};
 };
 

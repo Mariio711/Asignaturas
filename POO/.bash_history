@@ -19,3 +19,6 @@ cd Escobar_Vidal_Mario/
 cd P0/
 make
 make
+cd Escobar_Vidal_Mario/P0/
+make
+exit

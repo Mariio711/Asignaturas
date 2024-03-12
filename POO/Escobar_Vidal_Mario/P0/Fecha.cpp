@@ -1,4 +1,5 @@
 #include "fecha.hpp"
+#include <locale>
 
 using namespace std;
 
@@ -49,21 +50,21 @@ Fecha::Fecha(int d, int m, int a){
 
 //constructor con un parametro de tipo char*
 Fecha::Fecha(const char* f){
-    int dia, mes, anno;
+    int d, m, a;
 
-    if(sscanf(f, "%d/%d/%d", &dia, &mes, &anno) != 3){
+    if(sscanf(f, "%d/%d/%d", &d, &m, &a) != 3){
         throw Invalida("Formato incorrecto");
     }
 
-    //excepcion si el dia, el mes o el año son invalidos
-    verificarDia(dia);
-    verificarMes(mes);
-    verificarAnno(anno);
-
     //constuccion de la Fecha
-    dia_ = dia;
-    mes_ = mes;
-    anno_ = anno;
+    dia_ = (d == 0) ? tiempo_descompuesto->tm_mday : d;
+    mes_ = (m == 0) ? tiempo_descompuesto->tm_mon+1 : m;
+    anno_ = (a == 0) ? tiempo_descompuesto->tm_year+1900 : a;
+
+    //excepcion si el dia, el mes o el año son invalidos
+    verificarDia(dia_);
+    verificarMes(mes_);
+    verificarAnno(anno_);
     
 }
 
@@ -74,7 +75,7 @@ Fecha::Fecha(const char* f){
 //operador de suma con asignacion += f=f+n
 Fecha& Fecha::operator+=(int n){
     //convertimos la fecha a un struct tm para usar mktime
-    struct tm fecha_tm; //inicializamos a cero
+    struct tm fecha_tm = {}; //inicializamos a cero
     fecha_tm.tm_mday = dia_;
     fecha_tm.tm_mon = mes_ - 1;
     fecha_tm.tm_year = anno_ - 1900 ;
@@ -215,42 +216,28 @@ int Fecha::anno() const{
 /*sobrecarga del operador de conversion a const char*. */
 
 Fecha::operator const char*() const {
+    locale::global(std::locale("es_ES.UTF-8"));
     if(actual == true){
-        return this->crep;
+        return crep;
     }else{
-        //convertimos la fecha a un struct tm para usar mktime
-        struct tm fecha_tm; //inicializamos a cero
+        struct tm fecha_tm = {};
         fecha_tm.tm_mday = dia_;
         fecha_tm.tm_mon = mes_ - 1;
         fecha_tm.tm_year = anno_ - 1900 ;
-    
-        // Usamos mktime para obtener el tiempo en segundos desde la época Unix (1 de enero de 1970)
-        // y luego lo convertimos a un struct tm local con localtime
+
         time_t tiempo = mktime(&fecha_tm);
-        struct tm* tiempo_local = localtime(&tiempo);
-        
-        //convertimos el tiempo local a cadena de texto formateada con strftime (tiene muchas opciones mirar documentación)
-        char fecha_str[36];
-        strftime(fecha_str, 36, "%w %d %m %Y", tiempo_local);
-    
-        //ahora leemos la fecha_str formateada y almacenamos sus campos en variables temporales segun lo hayamos formateado
-        //en este caso el formato es "%w %d %m %Y" que significa "dia_semana dia_mes mes año
-        int dia_semana, dia, mes, anno;
-        sscanf(fecha_str, "%d %d %d %d", &dia_semana, &dia, &mes, &anno);
-    
-        //luego formateamos la cadena de salida con el formato deseado, la almacenamos en el crep y la devolvemos 
-        char mes_str[10];
-        char dia_str[10];
-        strcpy(dia_str, Fecha::dias[dia_semana]);
-        strcpy(mes_str, Fecha::meses[mes - 1]);
-        sprintf(crep, "%s %d de %s de %d", dia_str, dia, mes_str, anno);
-    
-        //actualizamos el valor del booleano de actualizacion a true
+        if (tiempo == -1) {
+            throw std::runtime_error("mktime failed");
+        }
+
+        struct tm tiempo_local;
+        if (localtime_r(&tiempo, &tiempo_local) == NULL) {
+            throw std::runtime_error("localtime_r failed");
+        }
+
+        strftime(crep, sizeof(crep), "%A %d de %B de %Y", &tiempo_local);
+
         actual = true;
         return crep;
     }
-
-
-
-    
 }
