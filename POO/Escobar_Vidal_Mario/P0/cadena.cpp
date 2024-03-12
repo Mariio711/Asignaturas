@@ -7,18 +7,18 @@ using namespace std;
 char Cadena::vacio[1] = {'\0'}; // Inicialización del caracter terminador de la cadena
 
 //constructor con dos parametros
-Cadena::Cadena(int tam, char s){
+Cadena::Cadena(int tam, char s): tam_(tam){
     if(tam == 0){
         s_ = vacio;//cadena vacia si la longitud deseada es 0 (por defecto)
     }else{
         //asignamos memoria dinamica 
-        s_ = new char[tam];
+        s_ = new char[tam + 1];
 
         //rellenamos la cadena con el carcacter de relleno
         for (int i = 0; i < tam; i++){
             s_[i] = s;
         }
-        s_[tam] = *vacio; //nos aseguramos de que la cadena termine en caracter nulo
+        s_[tam] = '\0'; //nos aseguramos de que la cadena termine en caracter nulo
     }
 }
 
@@ -29,11 +29,27 @@ Cadena::Cadena(const char* s){
     tam_ = strlen(s_); //asignamos el tamaño a la instancia de la cadena
 }
 
-//constructor de copia
+// Constructor de copia
 Cadena::Cadena(const Cadena& otra){
+    char* nueva_s = nullptr;
+    try{
+        nueva_s = new char[otra.tam_ + 1]; // intentamos asignar memoria
+    }catch(const std::bad_alloc&){
+        // si la asignación de memoria falla, lanzamos la excepción y no cambiamos el estado del objeto
+        throw;
+    }
+
+    // si la asignación de memoria fue exitosa, actualizamos el estado del objeto
     tam_ = otra.tam_;
-    s_ = new char(tam_ + 1);
-    strcpy(s_, otra.s_);
+    strcpy(nueva_s, otra.s_);
+    s_ = nueva_s;
+}
+
+//destructor
+Cadena::~Cadena() {
+    if (s_ != vacio) {
+        delete[] s_;
+    }
 }
 
 //sobrecarga de operador de asignacion (=) para una cadena
@@ -63,23 +79,23 @@ Cadena& Cadena::operator=(const Cadena& otra){
 
 //sobrecarga de operador de asignacion (=) para una cadena de bajo nivel
 Cadena& Cadena::operator=(const char* s){
-    char* nueva_s = nullptr;
+    if (s_ != s) { // Verifica si no es auto-asignación
+        char* nueva_s = nullptr;
 
-    //si no hay suficiente memoria no se realiza la asignacion
-    try{
-        nueva_s = new char[strlen(s) + 1]; // asignamos memoria
-    }catch(const std::bad_alloc&){
-        return *this;
+        try{
+            nueva_s = new char[strlen(s) + 1]; // asignamos memoria
+            strcpy(nueva_s, s); // copiamos la cadena
+            nueva_s[strlen(s)] = '\0'; // asignamos el carácter nulo
+        }catch(const std::bad_alloc&){
+            delete[] nueva_s; // liberamos la memoria si la asignación falla
+            throw; // relanzamos la excepción
+        }
+
+        // liberamos la memoria antigua y actualizamos los miembros
+        delete[] s_;
+        s_ = nueva_s;
+        tam_ = strlen(s);
     }
-
-    //si la asignacion de memoria fue exitosa
-    strcpy(nueva_s, s);
-    nueva_s[strlen(s) + 1] = '\0';
-
-    //liberamos la memoria antigua y actualizamos los miembros
-    delete[] s_;
-    s_ = nueva_s;
-    tam_ = strlen(s) + 1;
     return *this;
 }  
 
@@ -112,7 +128,7 @@ Cadena& Cadena::operator+=(const Cadena& otra){
     //liberamos la memoria antigua y actualizamos los miembros
     delete[] s_;
     s_ = nueva_s;
-    tam_ = strlen(strcat(s_, otra.s_)) + 1;
+    tam_ = nueva_longitud - 1;
     return *this;
 }
 
@@ -155,22 +171,25 @@ bool operator>=(const Cadena& c1, const Cadena& c2) {
 //sobrecarga del operador de indice
 #include <stdexcept> // para std::out_of_range
 
+// devuelve el caracter al que apunta la posicion del indice SIN comprobar si esta dentro del rango 
 char& Cadena::operator[](int unsigned indice) {
-    if (indice >= tam_) {
-        throw std::out_of_range("Índice fuera de rango");
-    }
     return s_[indice];
 }
 
+// devuelve el caracter al que apunta la posicion del indice SIN comprobar si esta dentro del rango 
 const char& Cadena::operator[](int unsigned indice) const {
+    return s_[indice];
+}
+
+// devuelve el caracter al que apunta la posicion del indice comprobando si esta dentro del rango 
+const char& Cadena::at(int unsigned indice)const{
     if (indice >= tam_) {
         throw std::out_of_range("Índice fuera de rango");
     }
     return s_[indice];
 }
-
-// devuelve el caracter al que apunta la posicion del indice
-char& Cadena::at(int unsigned indice)const{
+// devuelve el caracter al que apunta la posicion del indice comprobando si esta dentro del rango
+char& Cadena::at(unsigned int indice) {
     if (indice >= tam_) {
         throw std::out_of_range("Índice fuera de rango");
     }

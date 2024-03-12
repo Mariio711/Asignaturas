@@ -10,6 +10,9 @@ class Cadena{
         Cadena(const char* s); //a partir de una cadena de bajo nivel
         Cadena(const Cadena& otra); //constructor de copia
 
+        //destructor
+        ~Cadena();
+
         //sobrecarga de operadores
         Cadena& operator=(const Cadena& otra); //sobrecarga del operador de asignacion para otra clase cadena
         Cadena& operator=(const char* s); //sobrecarga del operador de asignacion para cadena de bajo nivel
@@ -31,7 +34,8 @@ class Cadena{
         //sobrecarga de operador de indice
         char& operator[](int unsigned indice); // devuelve el caracter al que apunta la posicion del indice
         const char& operator[](int unsigned indice) const; // devuelve el caracter al que apunta la posicion del indice
-        char& at(int unsigned indice) const; // devuelve el caracter al que apunta la posicion del indice
+        const char& at(int unsigned indice) const; // devuelve el caracter al que apunta la posicion del indice comprobando si esta dentro del rango
+        char& at(int unsigned indice); // devuelve el caracter al que apunta la posicion del indice comprobando si esta dentro del rango
         
         //metodos observadores
         size_t length() const; //devuelve el tamaño de la cadena

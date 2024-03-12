@@ -60,8 +60,6 @@ private:
     int dia_, mes_, anno_;
     std::time_t tiempo_calendario = std::time(nullptr);
     std::tm* tiempo_descompuesto = std::localtime(&tiempo_calendario);
-    const char* dias[7] {"domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"};
-    const char* meses[12] {"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"};
     mutable char crep[37]{};
     mutable bool actual {false};
 };
