@@ -8,22 +8,26 @@ char Cadena::vacio[1] = {'\0'}; // Inicialización del caracter terminador de la
 
 //constructor con dos parametros
 Cadena::Cadena(int tam, char s): tam_(tam){
-    //asignamos memoria dinamica 
-    s_ = new char[tam + 1];
-
-    //rellenamos la cadena con el carcacter de relleno
-    for (int i = 0; i < tam; i++){
-        s_[i] = s;
+ if (tam > 0) {
+        s_ = new char[tam + 1];
+        for (int i = 0; i < tam; i++){
+            s_[i] = s;
+        }
+        s_[tam] = '\0';
+    } else {
+        s_ = vacio;
     }
-    s_[tam] = '\0'; //nos aseguramos de que la cadena termine en caracter nulo
-
 }
 
 //constructor a partir de una cadena de bajo nivel
 Cadena::Cadena(const char* s){
-    s_ = new char[strlen(s)+1]; //asignamos memoria dinamica del tamaño de la cadena dada mas un espacio para el caracter termiandor
-    strcpy(s_, s); //copiamos la cadena de s en s_ 
-    tam_ = strlen(s_); //asignamos el tamaño a la instancia de la cadena
+    tam_ = strlen(s);
+    if (tam_ > 0) {
+        s_ = new char[tam_ + 1];
+        strcpy(s_, s);
+    } else {
+        s_ = vacio;
+    }
 }
 
 // Constructor de copia
@@ -76,22 +80,17 @@ Cadena& Cadena::operator=(const Cadena& otra){
 
 //sobrecarga de operador de asignacion (=) para una cadena de bajo nivel
 Cadena& Cadena::operator=(const char* s){
-    if (s_ != s) { // Verifica si no es auto-asignación
-        char* nueva_s = nullptr;
-
-        try{
-            nueva_s = new char[strlen(s) + 1]; // asignamos memoria
-            strcpy(nueva_s, s); // copiamos la cadena
-            nueva_s[strlen(s)] = '\0'; // asignamos el carácter nulo
-        }catch(const std::bad_alloc&){
-            delete[] nueva_s; // liberamos la memoria si la asignación falla
-            throw; // relanzamos la excepción
-        }
-
-        // liberamos la memoria antigua y actualizamos los miembros
-        delete[] s_;
-        s_ = nueva_s;
+    if (s_ != s) {
         tam_ = strlen(s);
+        if (tam_ > 0) {
+            char* nueva_s = new char[tam_ + 1];
+            strcpy(nueva_s, s);
+            delete[] s_;
+            s_ = nueva_s;
+        } else {
+            delete[] s_;
+            s_ = vacio;
+        }
     }
     return *this;
 }  
