@@ -8,18 +8,15 @@ char Cadena::vacio[1] = {'\0'}; // Inicialización del caracter terminador de la
 
 //constructor con dos parametros
 Cadena::Cadena(int tam, char s): tam_(tam){
-    if(tam == 0){
-        s_ = vacio;//cadena vacia si la longitud deseada es 0 (por defecto)
-    }else{
-        //asignamos memoria dinamica 
-        s_ = new char[tam + 1];
+    //asignamos memoria dinamica 
+    s_ = new char[tam + 1];
 
-        //rellenamos la cadena con el carcacter de relleno
-        for (int i = 0; i < tam; i++){
-            s_[i] = s;
-        }
-        s_[tam] = '\0'; //nos aseguramos de que la cadena termine en caracter nulo
+    //rellenamos la cadena con el carcacter de relleno
+    for (int i = 0; i < tam; i++){
+        s_[i] = s;
     }
+    s_[tam] = '\0'; //nos aseguramos de que la cadena termine en caracter nulo
+
 }
 
 //constructor a partir de una cadena de bajo nivel

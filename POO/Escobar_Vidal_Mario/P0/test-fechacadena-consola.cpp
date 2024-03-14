@@ -42,7 +42,7 @@ using namespace std;
 
 int main()
 {
-#ifndef CADENA
+
   /******* PRUEBAS DE LA CLASE Fecha **********/
   // No podemos sobrecargarlas porque tienen la misma signatura.
   Fecha obtener_fecha_v1(void), obtener_fecha_v2(void);
@@ -101,7 +101,7 @@ int main()
   Fecha f1 = obtener_fecha_v1(), f2 = obtener_fecha_v2();
   cout << "La 1ª fecha fue: \"" << f1;
   cout << "\", y la 2ª: \"" << f2 << "\"." << endl;
-#endif  // ifndef CADENA
+  // ifndef CADENA
 
 #ifndef FECHA
 /*****************************************************************************/
@@ -208,7 +208,7 @@ int main()
 #endif // ifndef FECHA
 } // ~
 
-#ifndef CADENA
+
 // Funciones auxiliares de pruebas de excepciones de Fecha
 Fecha obtener_fecha_v1()
 {
@@ -256,5 +256,5 @@ Fecha obtener_fecha_v2() // Otra alternativa. Tomamos la fecha de hoy
     cin.clear();
     return Fecha();
   }
-#endif // ifndef CADENA
+ // ifndef CADENA
 
