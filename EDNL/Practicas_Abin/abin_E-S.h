@@ -158,4 +158,50 @@ void imprimirDescendientes (ostream& os, typename Abin<T>::nodo n, const Abin<T>
       os << fin << ' ';
 }
 
+
+class Elemento {
+public:
+   double operando;
+   char operador;
+
+   Elemento(double operando = 0, char operador = 0)
+      : operando(operando), operador(operador) {}
+};
+
+// Sobrecarga del operador de inserción <<
+std::ostream& operator<<(std::ostream& os, const Elemento& e) {
+   if (e.operador != 0) {
+      os << "Operador: " << e.operador;
+   } else {
+      os << "Operando: " << e.operando;
+   }
+   return os;
+}
+
+// Sobrecarga del operador de extracción >>
+std::istream& operator>>(std::istream& is, Elemento& e) {
+   // Aquí necesitarías definir cómo se lee un Elemento de la entrada
+   // Por ejemplo, podrías leer primero un operador y, si es un caracter válido,
+   // asignarlo al campo operador de e. Si no es un caracter válido, podrías
+   // tratar de leerlo como un operando.
+   // Este es solo un ejemplo y necesitarías adaptarlo a tus necesidades.
+   char c;
+   if (is >> c && (c == '+' || c == '-' || c == '*' || c == '/')) {
+      e.operador = c;
+      e.operando = 0;
+   } else {
+      is.unget();
+      if (is >> e.operando) {
+         e.operador = 0;
+      } else {
+         // Maneja el error como prefieras
+      }
+   }
+   return is;
+}
+
+// Sobrecarga del operador de desigualdad !=
+bool operator!=(const Elemento& e1, const Elemento& e2) {
+   return e1.operando != e2.operando || e1.operador != e2.operador;
+}
 #endif  //ABIN_E_S_H
