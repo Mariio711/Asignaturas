@@ -2,11 +2,11 @@
 #include <fstream>
 #include "agenlis.h"
 #include "agen_E-S.h"
-#include "Ej1.cpp"
+#include "Ejercicios.cpp"
 
 using namespace std;
 typedef char tElto;
-const tElto fin = '#'; // fin de lectura
+const tElto fin = '*'; // fin de lectura
 
 int main (){
     Agen<tElto> A(16), B(16);
@@ -24,6 +24,9 @@ int main (){
     imprimirAgen(B); // En std::cout
 
     cout << "El grado del arbol es : " << gradoAgen(A) << endl;
+    cout << "El deesequilibrio del arbol es : " << desequilibrioAgen(A) << endl;
+
+
     
     system("pause");
     return 0;
