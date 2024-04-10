@@ -43,6 +43,9 @@ public:
     //operadores de conversion
     operator const char*() const;
 
+    //operadores de extraccion e insercion
+    //char operator <<();
+
 
     class Invalida{
         public:
