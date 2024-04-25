@@ -7,9 +7,8 @@ Implemente dicha función en C.*/
 int multiplicacion_rusa(int n, int m);
 
 //cabecera: int multiplicacion_rusa(int n, int m)
-//precondicion: n y m son enteros positivos
-//postcondicion: devuelve el producto de n y m mediante la multiplicacion rusa
-
+//precondicion: n y m son ensteros
+//postcondicion: devuelve el producto de n y m usando el algoritmo de la multiplicacion rusa
 int multiplicacion_rusa(int n, int m){
     if (n == 1){
         return m;
@@ -17,7 +16,7 @@ int multiplicacion_rusa(int n, int m){
     if (n % 2 == 0){
         return multiplicacion_rusa(n/2, m*2);
     }
-    return m + multiplicacion_rusa(n-1, m);
+    return m + multiplicacion_rusa(n-1, m); //se va acumulando cuando n es impar (se resta 1 para que)
 }
 
 //prueba
