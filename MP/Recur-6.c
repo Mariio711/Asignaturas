@@ -18,18 +18,19 @@ int potencia(int base, int exponente) {
 //cabecera: void encuentra(int n, int k, int s, int i, int sum)
 //precondicion: n > 0, k > 0, s > 0,  i = 1
 //postcondicion: encuentra dos numeros naturales k y s tal que n = sumatorio desde i=1 hasta s de i^k.
-void encuentra(int n, int k, int s) {
-    int sum = 0;
-    for (int i = 1; i <= s; i++) {
-        sum += potencia(i, k);
-    }
-    if (sum == n) {
+
+void encuentra(int n, int k, int s){
+    if (potencia(s, k) == n){
         printf("k = %d, s = %d\n", k, s);
         return;
     }
-    if (sum < n) {
+    if (potencia(s, k) > n){
+        return;
+    }
+    if (potencia(s, k) < n){
         encuentra(n, k, s + 1);
-    } else {
+    }
+    if (potencia(s, k) > n){
         encuentra(n, k + 1, 1);
     }
 }
