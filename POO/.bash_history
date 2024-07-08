@@ -60,3 +60,10 @@ make test-auto
 make clean
 make test-auto
 exit
+make test-auto
+cd Escobar_Vidal_Mario/P0/
+make test-auto
+make test-auto
+make test-consola
+make test-auto
+make test-auto
