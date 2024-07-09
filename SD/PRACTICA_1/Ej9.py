@@ -8,7 +8,7 @@ parámetro filename no es una cadena o es nulo (None) o si el fichero
 indicado no existe, se deberá generar la excepción correspondiente."""
 
 from genericpath import getsize
-import shutil, os
+import os
 
 def get_file_info(filename):
     if not isinstance(filename, str) or filename is None:
