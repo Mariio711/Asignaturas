@@ -13,8 +13,9 @@ def mostrar_archivos_cwd():
 
 def mod_filename_cwd(archivo, newname):
 
-    if not isinstance(archivo, str) or os.path.isfile(archivo):
-        raise ValueError("El archivo proporcionaod no es una cadena o no esiste") 
+    if not isinstance(archivo, str) or not os.path.isfile(archivo):
+        raise ValueError("El archivo proporcionado no es una cadena o no esiste")
+    
     if not isinstance(newname, str):
         raise ValueError("El nuevo nombre no es una cadena")
     
