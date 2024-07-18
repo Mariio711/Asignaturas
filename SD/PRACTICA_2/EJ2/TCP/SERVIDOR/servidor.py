@@ -8,12 +8,18 @@ def archivo_existe(nombre_archivo):
 
 # Recibe un archivo a través de una conexión de socket y lo guarda
 def recibir_archivo(conn, nombre_archivo):
+    # Primero, lee el tamaño del archivo
+    tamanio_archivo = conn.recv(1024).decode()
+    tamanio_archivo = int(tamanio_archivo)  # Asegúrate de convertirlo a entero
+
+    recibido = 0
     with open(nombre_archivo, "wb") as f:
-        while True:
+        while recibido < tamanio_archivo:
             datos = conn.recv(1024)
             if not datos:
-                break  # Finaliza la recepción si no hay más datos
+                break  # Esto no debería ocurrir si el cliente envía los datos correctamente
             f.write(datos)
+            recibido += len(datos)  # Actualiza el contador de bytes recibidos
 
 # Configura y ejecuta el servidor para recibir archivos
 def iniciar_servidor(dir, puerto):

@@ -32,13 +32,18 @@ def enviar_archivos(servidor, puerto, ruta_archivo):
         accion = input()
         s.send(accion.encode("utf-8"))
 
-        if accion == 'n':
+        if accion != 's':
             print("Trasnferencia cancelada")
             s.close()
             return
         
         respuesta = s.recv(1024).decode("utf-8")
         if respuesta == "OK":
+            
+            # Primero, envía el tamaño del archivo
+            tamanio_archivo = os.path.getsize(ruta_archivo)
+            s.send(str(tamanio_archivo).encode("utf-8"))
+
             with open(ruta_archivo, "rb") as fichero:
                 datos = fichero.read(1024)
                 while datos:
