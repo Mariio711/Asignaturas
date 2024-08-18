@@ -1,5 +1,4 @@
-from dataclasses import dataclass
-from dbm import _Database
+
 import json
 from bottle import get, put, post, run, request, response, HTTPError
 
@@ -26,7 +25,7 @@ def addroom():
         if id in database:
             raise HTTPError(400, 'Ya hay una habitacion con ese "ID"')
 
-        if id in data:
+        if id in data.get('id'):
             plazas = data.get('plazas')
             equip = data.get('equipamiento')
             equip = equip.split(',') if equip else [] #convertimos la cadena en una lista
@@ -37,13 +36,12 @@ def addroom():
             #añadimos la habitacion a la base de datos simulada
             database[id] = habitacion
 
-            # envía una respuesta al cliente
-            response.headers['Content-Type'] = 'application/json'
-            return json.dumps({'message': 'Habitacion agregada correctamente'})
-        else:
-            raise HTTPError(400, 'Ya hay una habitacion con ese "ID"')
+           # envía una respuesta al cliente
+        response.headers['Content-Type'] = 'application/json'
+        return json.dumps({'message': 'Habitacion agregada correctamente'})
     except Exception as e:
-        raise HTTPError(500, str(e))
+        response.headers['Content-Type'] = 'application/json'
+        return json.dumps({'error': str(e)})
 
 #modificar los datos de una habitacion
 @put ('/UpdateRoom/<RoomId>')
@@ -87,7 +85,7 @@ def mostrar_habitaciones():
     return json.dumps(habitaciones)
 
 #consultar habitacion mediante identificador
-@get ('/Rooms/<RoomId>')
+@get ('/Room/<RoomId>')
 def mostrar_habitacion(RoomId):
     if RoomId not in database:
         raise HTTPError(404, 'Habitacion no encontrada')
@@ -123,3 +121,6 @@ def mostrar_habitaciones_por_estado(status):
             })
 
     return json.dumps(habitaciones)
+
+if __name__ == '__main__':
+    run(host='localhost', port=8080, debug=True)
