@@ -12,6 +12,6 @@ Fecha::Fecha(int d, int m, int a): dia_{d}, mes_{m}, anno_{a} {
     if (d == 0){dia_ = dia;};
     if (m == 0){mes_ = mes;};
     if (a == 0){anno_ = anno;};
-
+ 
     //valida(); // funcion que comprueba que la fecha es correcta
 }
