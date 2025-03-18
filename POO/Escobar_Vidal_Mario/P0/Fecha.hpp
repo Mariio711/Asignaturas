@@ -1,6 +1,9 @@
 #ifndef FECHA_H_
 #define FECHA_H_
 
+#include <ctime>
+#include <iostream>
+
 class Fecha{
     public:
         //constantes año max y año min
@@ -12,16 +15,48 @@ class Fecha{
         int anno()const {return anno_;};
 
         //Constructores
-        Fecha(int d = 0, int m = 0, int a = 0); //con tres parámetros
-        Fecha(const Fecha& f): dia_{f.dia_}, mes_{f.mes_}, anno_{f.anno_}{} // de copia
+        explicit Fecha(int d = 0, int m = 0, int a = 0); //con tres parámetros
         Fecha(const char * f);
 
+        //sobrecarga de operadores de comparación 
+        friend bool operator== (const Fecha& a, const Fecha& b);
+        friend bool operator< (const Fecha& a, const Fecha& b);
+        friend bool operator> (const Fecha& a, const Fecha& b);
+        friend bool operator<= (const Fecha& a, const Fecha& b);
+        friend bool operator>= (const Fecha& a, const Fecha& b);
+        friend bool operator!= (const Fecha& a, const Fecha& b);
+
+        //sobrecarga de operadores aritmeticos
+        Fecha& operator+=(int n);
+        Fecha& operator-=(int n);
+        Fecha& operator+(int n);
+        Fecha& operator-(int n);
+
+        //sobrecraga operadores de incremento
+        Fecha operator++(int n);   //sufijo
+        Fecha& operator++();        //prefijo
+        Fecha operator--(int n);   //sufijo
+        Fecha& operator--();        //prefijo
+
+        //conversión a const char*
+        operator const char*() const;
+
+
+        //clase fecha::invalida
+        class Invalida{
+            public:
+                Invalida(const char* error): error_(error) {}
+                const char* por_que() const {return error_;}
+            private:
+            const char* error_;
+        };
 
     private:
         int dia_, mes_, anno_;
+        mutable char crep[40] {};
         bool valida() const;
-        void obtener_fecha_actual(int &dia, int &mes, int &anno);
-
+        bool actual = false;
+        
 };
- 
+
 #endif
