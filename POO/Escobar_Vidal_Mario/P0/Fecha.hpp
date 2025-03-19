@@ -10,9 +10,9 @@ class Fecha{
         static const int AnnoMininmo = 1902, AnnoMaximo = 2037;
 
         //Metodos observadores
-        int dia()const {return dia_;};
-        int mes()const {return mes_;};
-        int anno()const {return anno_;};
+        int dia() const {return dia_;};
+        int mes() const {return mes_;};
+        int anno() const {return anno_;};
 
         //Constructores
         explicit Fecha(int d = 0, int m = 0, int a = 0); //con tres parámetros
@@ -29,8 +29,8 @@ class Fecha{
         //sobrecarga de operadores aritmeticos
         Fecha& operator+=(int n);
         Fecha& operator-=(int n);
-        Fecha operator+(int n);
-        Fecha operator-(int n);
+        Fecha operator+(int n) const;
+        Fecha operator-(int n) const;
 
         //sobrecraga operadores de incremento
         Fecha operator++(int);   //sufijo
@@ -55,7 +55,7 @@ class Fecha{
         int dia_, mes_, anno_;
         mutable char crep[40] {};
         bool valida() const;
-        bool actual = false;
+        mutable bool actual = true;
         
 };
 

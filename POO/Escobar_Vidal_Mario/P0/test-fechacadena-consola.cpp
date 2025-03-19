@@ -19,6 +19,8 @@
    Si se definen ambas, el programa queda vacío y no sirve para nada. :-|
 */
 #define FECHA
+#undef CADENA
+
 #if !defined P0 && !defined P1
 #error Debe definir P0 o P1 (ej.: c++ -DP0 -c ...). Vea el Makefile.
 #endif
