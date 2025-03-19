@@ -10,11 +10,12 @@ class Cadena{
 
         //metodos observadores
 
-        int lenght()const {return strlen(cadena_);}; //devuelve la longitud de la cadena c
+        size_t lenght() const {return strlen(cadena_);}; //devuelve la longitud de la cadena c
     private:
-        char* cadena_;
-        int longitud_;
+        char vacia[1]{'\0'};
+        size_t tam_;
+        char* cadena_{}†;
 
 };
 
-#endif
+#endif 
