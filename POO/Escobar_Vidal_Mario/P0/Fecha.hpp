@@ -7,7 +7,7 @@
 class Fecha{
     public:
         //constantes año max y año min
-        const int AnnoMininmo = 1902, AnnoMaximo = 2037;
+        static const int AnnoMininmo = 1902, AnnoMaximo = 2037;
 
         //Metodos observadores
         int dia()const {return dia_;};
@@ -29,13 +29,13 @@ class Fecha{
         //sobrecarga de operadores aritmeticos
         Fecha& operator+=(int n);
         Fecha& operator-=(int n);
-        Fecha& operator+(int n);
-        Fecha& operator-(int n);
+        Fecha operator+(int n);
+        Fecha operator-(int n);
 
         //sobrecraga operadores de incremento
-        Fecha operator++(int n);   //sufijo
+        Fecha operator++(int);   //sufijo
         Fecha& operator++();        //prefijo
-        Fecha operator--(int n);   //sufijo
+        Fecha operator--(int);   //sufijo
         Fecha& operator--();        //prefijo
 
         //conversión a const char*

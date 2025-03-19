@@ -120,20 +120,20 @@ Fecha& Fecha::operator-=(int n){
     return *this += -n;
 }
 
-Fecha& Fecha::operator+(int n){
+Fecha Fecha::operator+(int n){
     Fecha t(*this);
     t += n;
     return t;
 }
 
-Fecha& Fecha::operator-(int n){
+Fecha Fecha::operator-(int n){
     Fecha t(*this);
     t += -n;
     return t;
 }
 
 //operadores de incremento
-Fecha Fecha::operator++(int n){     //sufijo f++
+Fecha Fecha::operator++(int){     //sufijo f++
     Fecha t(*this);
     *this += 1;
     return t;
@@ -144,7 +144,7 @@ Fecha& Fecha::operator++(){         //prefijo ++f
     return *this;
 }
 
-Fecha Fecha::operator--(int n){     //sufijo f--
+Fecha Fecha::operator--(int){     //sufijo f--
     Fecha t(*this);
     *this += -1;
     return t;

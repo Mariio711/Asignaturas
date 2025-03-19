@@ -10,6 +10,7 @@
   ©2021 Gerardo - La Gran Unificación
 */
 
+
 /* La macro P0 o la macro P1, según se esté en la práctica 0 o 1 
    respectivamente, debe estar definida.
    Si se define la macro FECHA o la macro CADENA, se compila solamente 
@@ -17,7 +18,7 @@
    Si no se definen FECHA ni CADENA, se compila todo el programa.
    Si se definen ambas, el programa queda vacío y no sirve para nada. :-|
 */
-
+#define FECHA
 #if !defined P0 && !defined P1
 #error Debe definir P0 o P1 (ej.: c++ -DP0 -c ...). Vea el Makefile.
 #endif
