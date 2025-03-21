@@ -7,7 +7,7 @@
 class Fecha{
     public:
         //constantes año max y año min
-        static const int AnnoMininmo = 1902, AnnoMaximo = 2037;
+        static const int AnnoMinimo = 1902, AnnoMaximo = 2037;
 
         //Metodos observadores
         int dia() const {return dia_;};
@@ -41,7 +41,6 @@ class Fecha{
         //conversión a const char*
         operator const char*() const;
 
-
         //clase fecha::invalida
         class Invalida{
             public:
@@ -55,7 +54,7 @@ class Fecha{
         int dia_, mes_, anno_;
         mutable char crep[40] {};
         bool valida() const;
-        mutable bool actual = true;
+        mutable bool actual = false;
         
 };
 
