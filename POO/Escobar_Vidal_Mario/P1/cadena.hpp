@@ -3,51 +3,52 @@
 
 #include <cstring>
 
-class Cadena{
-    public:
-        //constructores
-        explicit Cadena(size_t n = 0, char a = ' ');  //predeterminado
-        Cadena(const char* cadena);        //de conversion
-        Cadena(const Cadena& otra);                 //de copia
+class Cadena
+{
+public:
+    // constructores
+    explicit Cadena(size_t n = 0, char a = ' '); // predeterminado
+    Cadena(const char *cadena);                  // de conversion
+    Cadena(const Cadena &otra);                  // de copia
 
-        //operador de aignación
-        Cadena& operator=(const Cadena& otra);
-        Cadena& operator=(const char* cadena);
+    // operador de aignación
+    Cadena &operator=(const Cadena &otra);
+    Cadena &operator=(const char *cadena);
 
-        //destructor
-        ~Cadena();
+    // destructor
+    ~Cadena();
 
-        //metodos observadores
-        size_t length() const {return std::strlen(s_);}; //devuelve la longitud de la cadena c
+    // metodos observadores
+    size_t length() const { return std::strlen(s_); }; // devuelve la longitud de la cadena c
 
-        //operadores de comparación
-        friend bool operator== (const Cadena& a, const Cadena& b);
-        friend bool operator< (const Cadena& a, const Cadena& b);
-        friend bool operator> (const Cadena& a, const Cadena& b);
-        friend bool operator<= (const Cadena& a, const Cadena& b);
-        friend bool operator>= (const Cadena& a, const Cadena& b);
-        friend bool operator!= (const Cadena& a, const Cadena& b);
+    // operadores de comparación
+    friend bool operator==(const Cadena &a, const Cadena &b);
+    friend bool operator<(const Cadena &a, const Cadena &b);
+    friend bool operator>(const Cadena &a, const Cadena &b);
+    friend bool operator<=(const Cadena &a, const Cadena &b);
+    friend bool operator>=(const Cadena &a, const Cadena &b);
+    friend bool operator!=(const Cadena &a, const Cadena &b);
 
-        //operadores aritmeticos
-        Cadena& operator +=(const Cadena& b);                               //concatenación
-        friend Cadena operator+(const Cadena& a, const Cadena& b);         //concatenaciôn sin
+    // operadores aritmeticos
+    Cadena &operator+=(const Cadena &b);                       // concatenación
+    friend Cadena operator+(const Cadena &a, const Cadena &b); // concatenaciôn sin
 
-        //operador de indice
-        char& operator[] (size_t i);
-        const char& operator[] (size_t i) const;
+    // operador de indice
+    char &operator[](size_t i);
+    const char &operator[](size_t i) const;
 
-        //conversion a cadena de bajo nivel
-        explicit operator const char*() const;
+    // conversion a cadena de bajo nivel
+    explicit operator const char *() const;
 
-        //metodos
-        char& at(size_t i);
-        const char& at(size_t i) const;
-        Cadena substr(unsigned int i, unsigned int tam) const;
-    private:
-        static char vacia[1];
-        size_t tam_;
-        char* s_;
+    // metodos
+    char &at(size_t i);
+    const char &at(size_t i) const;
+    Cadena substr(unsigned int i, unsigned int tam) const;
 
+private:
+    static char vacia[1];
+    size_t tam_;
+    char *s_;
 };
 
-#endif 
+#endif
