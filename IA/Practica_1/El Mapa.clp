@@ -62,7 +62,7 @@
 ;;fonmateo de la entrada
 (defrule inicio
     ?f1 <-(situacion ?x ?y)
-    (ubiacion ?x ?u ?y)
+    (ubicacion ?x ?u ?y)
 =>
     (printout t ?x" esta al "?u" de " ?y crlf)
     (retract ?f1)
