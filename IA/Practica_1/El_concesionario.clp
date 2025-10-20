@@ -1,0 +1,81 @@
+(deftemplate coche
+    (slot modelo)
+    (slot precio)
+    (slot tam_mal (allowed-values pequeño mediano grande))
+    (slot cv)
+    (slot ABS (allowed-values si no)) 
+    (slot consumo (type FLOAT))
+)
+
+(deftemplate busqueda
+    (slot presupuesto)
+    (slot tamaño (allowed-values pequeño mediano grande))
+    (slot ABS (allowed-values si no))
+    (slot consumo (type FLOAT))
+)
+
+(deffacts iniciales
+    (coche
+        (modelo modelo1)
+        (precio 12000)
+        (tam_mal pequeño)
+        (cv 65)
+        (ABS no) 
+        (consumo 4.7)
+    )
+    (coche
+        (modelo modelo2)
+        (precio 12500)
+        (tam_mal pequeño)
+        (cv 80)
+        (ABS si) 
+        (consumo 4.9)
+    )
+    (coche
+        (modelo modelo3)
+        (precio 13000)
+        (tam_mal mediano)
+        (cv 100)
+        (ABS si) 
+        (consumo 7.8)
+    )
+    (coche
+        (modelo modelo4)
+        (precio 14000)
+        (tam_mal grande)
+        (cv 125)
+        (ABS si) 
+        (consumo 6.0)
+    )
+    (coche
+        (modelo modelo5)
+        (precio 15000)
+        (tam_mal pequeño)
+        (cv 147)
+        (ABS si) 
+        (consumo 8.5)
+    )
+)
+
+(deffunction solicitar-presupuesto ()
+    (printout t "=== FORMULARIO DE BÚSQUEDA DE COCHE ===" crlf)
+    (printout t "¿Cuál es tu presupuesto máximo? " )
+    (bind ?presupuesto (read))
+    (printout t "¿Tamaño preferido (pequeño/mediano/grande)? " )
+    (bind ?tamaño (read))
+    (printout t "¿Deseas ABS? (si/no) " )
+    (bind ?abs (read))
+    (printout t "¿Consumo máximo aceptable (l/100km)? " )
+    (bind ?consumo (read))
+    
+    (assert (busqueda (presupuesto ?presupuesto) (tamaño ?tamaño) (ABS ?abs) (consumo ?consumo)))
+)
+
+(defrule buscar-coches
+    (busqueda (presupuesto ?p) (tamaño ?t) (ABS ?a) (consumo ?c))
+    (coche (modelo ?m) (precio ?pr) (tam_mal ?t) (ABS ?a) (consumo ?co))
+    (test (<= ?pr ?p))
+    (test (<= ?co ?c))
+=>
+    (printout t "✓ Recomendación: " ?m " - Precio: " ?pr "€" crlf)
+)
