@@ -1,5 +1,5 @@
-(defglobal  ?*ANNO* = 2024
-            ?*LIMITE1* = 5000)
+(defglobal  ?*ANNO* = 2025
+            ?*LIMITE1* = 900)
 
 (deftemplate usuario
     (slot dni)
@@ -12,7 +12,7 @@
     (slot pin)
     (slot intentos (default 3))
     (slot limite (default 3000))
-    (slot validada (default SI)(allowed-values SI NO))
+    (slot validada (default NO)(allowed-values SI NO))
     (slot anno (default 2030))
 )
 
@@ -81,3 +81,51 @@
 
 ;;operaciones con cuentas
 
+;; Muesta el saldo de la cuenta asociada a la tarjeta validada
+(defrule Muestra_Saldo
+    (usuario (dni ?dni) (cashout ?cashout))
+    (tarjeta (dni ?dni) (validada SI))
+    ?f1 <- (cuenta (dni ?dni) (saldo ?saldo))
+    (test (<= ?cashout ?saldo))
+=>
+    (printout t "Saldo de la cuenta = " ?saldo "€" crlf)
+    (retract ?f1)
+    (assert (cuenta (dni ?dni) (saldo ?saldo) (estado enPantalla)))
+)
+
+;;Saldo insuficiente
+(defrule Saldo_NoSuficiente
+    ?f1 <- (usuario (dni ?dni) (cashout ?cashout))
+    (tarjeta (dni ?dni) (validada SI))
+    (cuenta (dni ?dni) (saldo ?saldo))
+    (test (> ?cashout ?saldo))
+=>
+    (printout t "Saldo de la cuenta insuficiente, no se puede realizar la operacion")
+    (retract ?f1)
+)
+
+
+;; Comprueba limite del blanco
+(defrule Comprueba_Limite1
+    ?f1 -> (usuario (dni ?dni) (pin ?pin) (cashout ?cashout))
+    (test (< ?*LIMITE1* ?cashout))
+=>
+    (retract ?f1)
+    (printout t "Su peticion supera el limite establecido por el banco." crlf)
+    (printout t "Introduce una cantidad inferior a " ?*LIMITE1* "€: ")
+    (bind ?newcashout (read))
+    (assert (usuario (dni ?dni) (pin ?pin) (cashout ?newcashout)))
+)
+
+;; Comprueba limite de la tarjeta
+(defrule Comprueba_Limite2
+    ?f1 -> (usuario (dni ?dni) (pin ?pin) (cashout ?cashout))
+    (tarjeta (dni ?dni) (validada SI) (limite ?lim))
+    (test (< ?lim ?cashout))
+=>
+    (retract ?f1)
+    (printout t "Su peticion supera el limite establecido por la tarjeta." crlf)
+    (printout t "Introduce una cantidad inferior a " ?lim "€: ")
+    (bind ?newcashout (read))
+    (assert (usuario (dni ?dni) (pin ?pin) (cashout ?newcashout)))
+)
