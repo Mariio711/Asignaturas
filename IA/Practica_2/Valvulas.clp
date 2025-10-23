@@ -13,7 +13,7 @@
 )
 
 ;;Funciones
-(deffunction aumPresion (?te ?p)
+(deffunction aumPresion (?p ?te)
     (while (> ?te 35)
         (bind ?p (+ ?p 1))
         (bind ?te (- ?te 5))

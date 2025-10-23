@@ -8,6 +8,10 @@
     (slot Estado (allowed-values EnTierra Ascenso Crucero Descenso)(default EnTierra))
 )
 
+(deftemplate Peticion_Autorizada
+    (slot IdAeronave)
+)
+
 (deftemplate aerodromo
     (slot Id)
     (slot Ciudad)
@@ -29,13 +33,19 @@
     (slot VelCrucero (default 700))
 )
 
+(deftemplate meteorologia
+    (slot IdAerodromo)
+    (slot Tiempo (allowed-values Lluvia Niebla Nieve VientoHuracanado Despejado))
+    (slot Restringir (allowed-values Si No))
+)
+
 
 ; Hechos iniciales para aeronaves
 (deffacts iniciales
     (aeronaves (Id FX220) (Compania IB) (Origen MAD) (Destino BCN) (VelActual 0) (Peticion Despegue) (Estado EnTierra))
-    (aeronaves (Id FX221) (Compania IB) (Origen MAD) (Destino VLC) (VelActual 0) (Peticion Despegue) (Estado EnTierra))
-    (aeronaves (Id FX222) (Compania IB) (Origen MAD) (Destino AGP) (VelActual 0) (Peticion Despegue) (Estado EnTierra))
-    (aeronaves (Id FX223) (Compania IB) (Origen MAD) (Destino BIO) (VelActual 0) (Peticion Despegue) (Estado EnTierra))
+    (aeronaves (Id FX221) (Compania IB) (Origen BCN) (Destino VLC) (VelActual 0) (Peticion Despegue) (Estado EnTierra))
+    (aeronaves (Id FX222) (Compania IB) (Origen AGP) (Destino AGP) (VelActual 0) (Peticion Despegue) (Estado EnTierra))
+    (aeronaves (Id FX223) (Compania IB) (Origen BIO) (Destino BIO) (VelActual 0) (Peticion Despegue) (Estado EnTierra))
     (aeronaves (Id FX224) (Compania IB) (Origen MAD) (Destino PMI) (VelActual 0) (Peticion Despegue) (Estado EnTierra))
 
 
@@ -51,9 +61,9 @@
     ; Hechos iniciales para vuelos
 
     (vuelos (IdOrigen MAD) (IdDestino BCN) (Distancia 880) (VelDespegue 240) (VelCrucero 800))
-    (vuelos (IdOrigen MAD) (IdDestino VLC) (Distancia 300) (VelDespegue 240) (VelCrucero 700))
-    (vuelos (IdOrigen MAD) (IdDestino AGP) (Distancia 500) (VelDespegue 240) (VelCrucero 750))
-    (vuelos (IdOrigen MAD) (IdDestino BIO) (Distancia 400) (VelDespegue 240) (VelCrucero 720))
+    (vuelos (IdOrigen BCN) (IdDestino VLC) (Distancia 300) (VelDespegue 240) (VelCrucero 700))
+    (vuelos (IdOrigen AGP) (IdDestino AGP) (Distancia 500) (VelDespegue 240) (VelCrucero 750))
+    (vuelos (IdOrigen BIO) (IdDestino BIO) (Distancia 400) (VelDespegue 240) (VelCrucero 720))
     (vuelos (IdOrigen MAD) (IdDestino PMI) (Distancia 600) (VelDespegue 240) (VelCrucero 780))
 
 
@@ -64,38 +74,77 @@
     (aerodromo (Id VLC) (Ciudad Valencia) (Radar ON) (Visibilidad 6) (Viento 30))
     (aerodromo (Id AGP) (Ciudad Malaga) (Radar ON) (Visibilidad 6) (Viento 220))
     (aerodromo (Id BIO) (Ciudad Bilbao) (Radar OFF) (Visibilidad 6) (Viento 60))
+
+    ; HEchos iniciales de meteorologia
+
+    (meteorologia (IdAerodromo MAD) (Tiempo Despejado) (Restringir Si))
+    (meteorologia (IdAerodromo BCN) (Tiempo Niebla) (Restringir No))
+    (meteorologia (IdAerodromo VLC) (Tiempo Lluvia) (Restringir No))
+    (meteorologia (IdAerodromo AGP) (Tiempo VientoHuracanado) (Restringir No))
+    (meteorologia (IdAerodromo BIO) (Tiempo Niebla) (Restringir No))
 )
 
+;; Funciones auxiliares
+(deffunction calcular-tiempo-horas (?distancia ?velCrucero)
+    (div ?distancia ?velCrucero)
+)
 
+(deffunction calcular-tiempo-minutos (?distancia ?velCrucero)
+    (mod (round (* (/ ?distancia ?velCrucero) 60)) 60)
+)
 
 ;;Reglas
-(defrule despegar
+(defrule Alerta_Meteorologica
+    (declare (salience 20))
+    ?aeronave <- (aeronaves (Id ?idAeronave) (Peticion Despegue) (Origen ?origen))
+    (meteorologia (IdAerodromo ?origen) (Restringir Si))
+    ?piloto <- (piloto (IdAeronave ?idAeronave) (Estado ?e))
+=>
+    (modify ?aeronave (Peticion Ninguna))
+    (modify ?piloto (Estado Stand-by))
+    (println "Alerta: Despegue CANCELADO por condiciones climaticas adversas")
+)
+
+(defrule PeticionDespegue
+    (declare (salience 5))
     ?aeronave <- (aeronaves (Id ?idAeronave) (Estado EnTierra) (Peticion Despegue) (Origen ?origen) (Destino ?destino))
     ?piloto <- (piloto (IdAeronave ?idAeronave) (Estado OK))
     ?aerodromo <- (aerodromo (Id ?origen) (Radar ON) (Visibilidad ?vis) (Viento ?viento))
     (test (> ?vis 5))
     (test (< ?viento 75))
     ?vuelo <- (vuelos (IdOrigen ?origen) (IdDestino ?destino) (VelDespegue ?velDespegue))
+    (meteorologia (IdAerodromo ?origen) (Restringir No))
+    (not (Peticion_Autorizada (IdAeronave ?idAeronave)))
 =>
-    (modify ?piloto (Estado Ejecutando))
-    (modify ?aeronave (Estado Ascenso) (Peticion Ninguna) (VelActual ?velDespegue))
+    (assert (Peticion_Autorizada (IdAeronave ?idAeronave)))
     (printout t "Autorización de despegue concedida para la aeronave " ?idAeronave crlf)
 )
 
-(defrule Excepcion
+(defrule PilotoAsociado
+    (declare (salience 10))
     ?aeronave <- (aeronaves (Id ?idAeronave) (Estado EnTierra) (Peticion Despegue) (Origen ?origen) (Destino ?destino) (Compania ?compania))
-    ?piloto <- (piloto (IdAeronave ?idAeronave) (Estado ?estado&:(neq ?estado OK)))
+    ?piloto <- (piloto (IdAeronave ?idAeronave) (Estado OK))
     ?aerodromo <- (aerodromo (Id ?origen))
 =>
-    (modify ?aeronave (Peticion Emergencia))
-    (printout t "ATENCION El piloto de la aeronave " ?idAeronave " de la compañía " ?compania " no se encuentra disponible para iniciar el despegue desde el aeródromo " ?origen " con destino " ?destino crlf)
+    (printout t "COMPROBACION CORRECTA: El piloto de la aeronave " ?idAeronave " de la compañía " ?compania " se encuentra disponible para iniciar el despegue desde el aeródromo " ?origen " con destino " ?destino crlf)
 )
 
-(deffunction calcular-tiempo-horas (?distancia ?velCrucero)
-    (div ?distancia ?velCrucero))
-
-(deffunction calcular-tiempo-minutos (?distancia ?velCrucero)
-    (mod (round (* (/ ?distancia ?velCrucero) 60)) 60))
+(defrule Despegue
+    (declare (salience 5))
+    ?aeronave <- (aeronaves (Id ?idAeronave) (Estado EnTierra) (Peticion Despegue) (Origen ?origen) (Destino ?destino))
+    ?piloto <- (piloto (IdAeronave ?idAeronave) (Estado OK))
+    ?aerodromo <- (aerodromo (Id ?origen) (Radar ON) (Visibilidad ?vis) (Viento ?viento))
+    ?vuelo <- (vuelos (IdOrigen ?origen) (IdDestino ?destino) (VelDespegue ?velDespegue))
+    ?peticion <- (Peticion_Autorizada (IdAeronave ?idAeronave))
+    (meteorologia (IdAerodromo ?origen) (Restringir No))
+    (test (> ?vis 5))
+    (test (< ?viento 75))
+=>
+    (retract ?peticion)
+    (modify ?piloto (Estado Ejecutando))
+    (modify ?aeronave (Estado Ascenso) (Peticion Ninguna) (VelActual ?velDespegue))
+    (printout t "Despegue ejecutado para la aeronave " ?idAeronave crlf)
+)
 
 
 (defrule crucero
